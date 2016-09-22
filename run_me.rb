@@ -1,19 +1,26 @@
 require_relative 'football_season'
 require_relative 'pick_analyzer'
+require_relative 'helper'
 
 season = FootballSeason.new
-season.loadGames()
 
-pickAnalyzer = PickAnalyzer.new(season)
 
 def printPicks(picks, season)
   picks.each {|week, team| puts "week #{week} - #{team} - #{season.getGameForTeamAndWeek(team, week)}"}
 end
 
-previousPicks = ["SEA"]
-teams = pickAnalyzer.sortTeamsByWinMargin(season.teams).reverse.take(32) - previousPicks
+def getPicks(season)
+  pickAnalyzer = PickAnalyzer.new(season)
+  previousPicks = getPreviousPicks()
+  teams = season.teams - previousPicks
 
-picks = pickAnalyzer.pickOptimalTeamsForWeeks(previousPicks.length + 1, 14, teams)
+  return pickAnalyzer.pickOptimalTeamsForWeeks(previousPicks.length + 1, 14, teams)
+end
 
-#picks = pickAnalyzer.pickWorstTeamFirst()
+picks = getPicks(season)
+
+puts "Previous picks are: #{getPreviousPicks()}"
+puts ""
 printPicks(picks, season)
+puts ""
+season.getGamesForWeek(3).each {|game| puts game}

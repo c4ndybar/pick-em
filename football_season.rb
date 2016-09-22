@@ -13,12 +13,7 @@ class FootballSeason
     @weeks = (1..16).to_a
   end
 
-  def loadGames()
-    CSV.foreach("spreads.csv") do |row|
-      game = Game.new(row)
-      @games.push(game)
-    end
-  end
+
 
   def getGamesForWeek(week)
     return @games.select {|g| g.week == week}
@@ -49,5 +44,14 @@ class FootballSeason
 
   def isByeWeek(team, week)
     return getGameForTeamAndWeek(team, week) == nil
+  end
+
+  private
+
+  def loadGames()
+    CSV.foreach("spreads.csv") do |row|
+      game = Game.new(row)
+      @games.push(game)
+    end
   end
 end

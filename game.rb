@@ -29,6 +29,10 @@ class Game
     end
   end
 
+  def hasTeam(team)
+    return @homeTeam == team || @awayTeam == team
+  end
+
   def to_s
     return "#{@week} - #{@awayTeam}@#{homeTeam} - #{favoredTeam} by #{point_differential}"
   end
