@@ -5,10 +5,10 @@ require_relative 'helper'
 class FootballSeason
   attr_reader :games, :teams, :weeks
 
-  def initialize
+  def initialize(file_path)
     @games = []
 
-    load_games
+    load_games(file_path)
     @teams = @games.map(&:home_team).uniq.sort
     @weeks = (1..16).to_a
   end
@@ -46,8 +46,8 @@ class FootballSeason
 
   private
 
-  def load_games
-    CSV.foreach('spreads.csv') do |row|
+  def load_games(file_path)
+    CSV.foreach(file_path) do |row|
       game = Game.new(row)
       @games.push(game)
     end
