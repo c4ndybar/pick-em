@@ -3,24 +3,25 @@ require_relative 'pick_analyzer'
 require_relative 'helper'
 
 season = FootballSeason.new
+current_week = 3
+end_week = 14
 
-
-def printPicks(picks, season)
-  picks.each {|week, team| puts "week #{week} - #{team} - #{season.getGameForTeamAndWeek(team, week)}"}
+def print_picks(picks, previous_picks, current_week, season)
+  puts "Previous picks are: #{previous_picks}"
+  puts ''
+  picks.each { |week, team| puts "week #{week} - #{team} - #{season.get_games_for_team_and_week(team, week)}" }
+  puts ''
+  season.get_games_for_week(current_week).each { |game| puts game }
 end
 
-def getPicks(season)
-  pickAnalyzer = PickAnalyzer.new(season)
-  previousPicks = getPreviousPicks()
-  teams = season.teams - previousPicks
+def get_picks_for_season(season, previous_picks, current_week, end_week)
+  pick_analyzer = PickAnalyzer.new(season)
+  teams = season.teams - previous_picks
 
-  return pickAnalyzer.pickOptimalTeamsForWeeks(previousPicks.length + 1, 14, teams)
+  pick_analyzer.pick_optimal_teams_for_weeks(current_week, end_week, teams)
 end
 
-picks = getPicks(season)
+previous_picks = get_previous_picks
+picks = get_picks_for_season(season, previous_picks, current_week, end_week)
 
-puts "Previous picks are: #{getPreviousPicks()}"
-puts ""
-printPicks(picks, season)
-puts ""
-season.getGamesForWeek(3).each {|game| puts game}
+print_picks(picks, previous_picks, current_week, season)

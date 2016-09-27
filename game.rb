@@ -1,39 +1,39 @@
 class Game
-  attr_accessor :week, :date, :awayTeam, :homeTeam, :spread, :point_differential
+  attr_accessor :week, :date, :away_team, :home_team, :spread, :point_differential
 
   def initialize(csv_row)
     @week = csv_row[0].strip.to_i
     @date = csv_row[1].strip
-    @awayTeam = csv_row[2].strip
-    @homeTeam = csv_row[3].strip
+    @away_team = csv_row[2].strip
+    @home_team = csv_row[3].strip
     @spread = csv_row[4].strip.to_f
 
     @point_differential = @spread.abs
   end
 
-  def getMarginOfVictory(team)
-    if team == @homeTeam
+  def get_margin_of_victory(team)
+    if team == @home_team
       return @spread * -1
     else
       return @spread
     end
   end
 
-  def favoredTeam()
-    if @spread == 0
+  def favored_team
+    if @spread.zero?
       return nil
     elsif spread < 0
-      return @homeTeam
+      return @home_team
     else
-      return @awayTeam
+      return @away_team
     end
   end
 
-  def hasTeam(team)
-    return @homeTeam == team || @awayTeam == team
+  def has_team(team)
+    @home_team == team || @away_team == team
   end
 
   def to_s
-    return "#{@week} - #{@awayTeam}@#{homeTeam} - #{favoredTeam} by #{point_differential}"
+    "#{@week} - #{@away_team}@#{home_team} - #{favored_team} by #{point_differential}"
   end
 end

@@ -1,105 +1,95 @@
 class PickAnalyzer
   def initialize(season)
     @season = season
-    @margins = Hash.new
+    @margins = {}
   end
 
-  def printWeeklyFavorites()
+  def print_weekly_favorites
     @season.weeks.each do |week|
-      weekPick = @season.getGamesForWeek(week).sort {|g1, g2| g1.point_differential <=> g2.point_differential}.last
+      week_pick = @season.get_games_for_week(week).sort_by(&:point_differential).last
 
-      puts weekPick
+      puts week_pick
     end
   end
 
-  def printBestWeekForTeams()
+  def print_best_week_for_teams
     @season.teams.each do |team|
-      teamBest = @season.getGamesForTeam(team).sort {|g1, g2| g1.getMarginOfVictory(team) <=> g2.getMarginOfVictory(team)}.last
+      best_game = @season.get_games_for_team(team).sort { |g1, g2| g1.get_margin_of_victory(team) <=> g2.get_margin_of_victory(team) }.last
 
-      puts "Best game for #{team}: #{teamBest}"
+      puts "Best game for #{team}: #{best_game}"
     end
   end
 
-  def printDebugInfo()
-    @season.games.each {|g| p g}
+  def print_debug_info
+    @season.games.each { |g| p g }
     puts 'game count is ' + @season.games.length.to_s
-    @season.teams.each {|t| puts t}
+    @season.teams.each { |t| puts t }
     puts 'team count is ' + @season.teams.length.to_s
-    @season.weeks.each {|w| puts w}
+    @season.weeks.each { |w| puts w }
     puts 'week count is ' + @season.weeks.length.to_s
   end
 
-  def getMarginForTeamAndWeek(team, week)
-    if @margins[team] == nil
-      @margins[team] = Hash.new
+  def get_margin_for_team_and_week(team, week)
+    @margins[team] = {} if @margins[team].nil?
+
+    if @margins[team][week].nil?
+      @margins[team][week] = @season.get_margin_of_victory_for_team_and_week(team, week)
     end
 
-    if @margins[team][week] == nil
-      @margins[team][week] = @season.getMarginOfVictoryForTeamAndWeek(team, week)
-    end
-
-    return @margins[team][week]
+    @margins[team][week]
   end
 
-  def pickOptimalTeamsForWeeks(week, lastWeek, teams)
-    bestteam = nil
-    bestMargin = nil
-    bestPicks = []
-    teamMargin = 0
+  def pick_optimal_teams_for_weeks(week, last_week, teams)
+    best_team = nil
+    best_margin = nil
+    best_picks = []
+    team_margin = 0
 
-    bestTeams = teams.select {|team| getMarginForTeamAndWeek(team, week) >= 5}
-    bestTeams.each do |team|
-
-      if week < lastWeek
+    best_teams = teams.select { |team| get_margin_for_team_and_week(team, week) >= 5 }
+    best_teams.each do |team|
+      if week < last_week
         teams.delete(team)
-        picks = pickOptimalTeamsForWeeks(week + 1, lastWeek, teams)
+        picks = pick_optimal_teams_for_weeks(week + 1, last_week, teams)
         teams.push(team)
-        if picks == nil
-          next
-        end
+        next if picks.nil?
       else
         picks = []
       end
 
-      winMargin = getMarginForTeamAndWeek(team, week)
-      totalWinMargin = calculateWinMarginSum(picks) + winMargin
-      if bestMargin == nil || totalWinMargin > bestMargin
-        bestteam = team
-        bestMargin = totalWinMargin
-        bestPicks = picks
-        teamMargin = winMargin
-      end
-
+      win_margin = get_margin_for_team_and_week(team, week)
+      total_win_margin = calculate_win_margin_sum(picks) + win_margin
+      next unless best_margin.nil? || total_win_margin > best_margin
+      best_team = team
+      best_margin = total_win_margin
+      best_picks = picks
+      team_margin = win_margin
     end
 
-    if bestteam == nil
-      return nil
-    end
+    return nil if best_team.nil?
 
-    bestPick = [week, bestteam, teamMargin]
-    bestPicks.push(bestPick)
+    best_pick = [week, best_team, team_margin]
+    best_picks.push(best_pick)
 
-    return bestPicks
+    best_picks
   end
 
-  def calculateWinMarginSum(picks)
+  def calculate_win_margin_sum(picks)
     sum = 0
     picks.each do |pick|
       sum += pick[2]
     end
 
-    return sum
+    sum
   end
 
-  def simplePicker()
-    weeklyPicks = Hash.new
+  def simple_picker
+    weekly_picks = {}
 
     @season.weeks.each do |week|
-      pick = @season.getGamesForWeek(week).sort {|g1, g2| g1.point_differential <=> g2.point_differential}.select {|g| !(weeklyPicks.has_value? g.favoredTeam)}.last
-      weeklyPicks[week] = pick.favoredTeam
+      pick = @season.get_games_for_week(week).sort_by(&:point_differential).select { |g| !(weekly_picks.value? g.favored_team) }.last
+      weekly_picks[week] = pick.favored_team
     end
 
-    return weeklyPicks
+    weekly_picks
   end
-
 end
