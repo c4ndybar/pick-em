@@ -2,7 +2,7 @@ require_relative 'football_season'
 require_relative 'pick_analyzer'
 require_relative 'helper'
 
-current_week = 3
+current_week = 6
 end_week = 14
 spread_file = '../spreads.csv'
 previous_picks_file = '../previous_picks.csv'
