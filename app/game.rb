@@ -7,8 +7,10 @@ class Game
     @away_team = csv_row[2].strip
     @home_team = csv_row[3].strip
     @spread = csv_row[4].strip.to_f
+  end
 
-    @point_differential = @spread.abs
+  def point_differential
+    @spread.abs
   end
 
   def get_margin_of_victory(team)
@@ -17,6 +19,10 @@ class Game
     else
       return @spread
     end
+  end
+
+  def get_spread(team)
+    get_margin_of_victory(team) * -1
   end
 
   def favored_team

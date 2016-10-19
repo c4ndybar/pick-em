@@ -17,7 +17,7 @@ class FootballSeason
     @games.select { |g| g.week == week }
   end
 
-  def get_games_for_team(team)
+  def get_games_for_team_and_weekam(team)
     @games.select { |g| g.away_team == team || g.home_team == team }
   end
 
