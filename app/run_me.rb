@@ -18,7 +18,18 @@ def print_picks(picks, previous_picks, season)
   puts ''
   picks.each { |week, team| puts "week #{week} - #{team} - #{season.get_games_for_team_and_week(team, week)}" }
   puts ''
-  season.get_games_for_week(CURRENT_WEEK).each { |game| puts game }
+  picks.each do |week, team|
+    puts "week #{week}"
+    optimal_pick = season.get_games_for_team_and_week(team, week)
+    games = season.get_games_for_week(week)
+    pick_found = false
+    games.sort_by(&:point_differential).reverse.each_with_index do |game, index|
+      best_pick = game == optimal_pick
+      puts "#{game} #{best_pick ? '<--- optimal pick' : '' }"
+      pick_found ||= best_pick
+      break if pick_found && index >= 2
+    end
+  end
 end
 
 def get_picks_for_season(season, previous_picks)
