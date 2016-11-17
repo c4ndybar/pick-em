@@ -39,17 +39,20 @@ class PickAnalyzer
     @margins[team][week]
   end
 
-  def pick_optimal_teams_for_weeks(week, last_week, teams)
+  def pick_optimal_teams_for_weeks(week, last_week, min_point_threshold, teams)
     best_team = nil
     best_margin = nil
     best_picks = []
     team_margin = 0
 
-    best_teams = teams.select { |team| get_margin_for_team_and_week(team, week) >= 5 }
+    best_teams = teams.select do |team|
+      get_margin_for_team_and_week(team, week) >= min_point_threshold
+    end
+
     best_teams.each do |team|
       if week < last_week
         teams.delete(team)
-        picks = pick_optimal_teams_for_weeks(week + 1, last_week, teams)
+        picks = pick_optimal_teams_for_weeks(week + 1, last_week, min_point_threshold, teams)
         teams.push(team)
         next if picks.nil?
       else
