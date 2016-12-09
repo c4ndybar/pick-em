@@ -3,8 +3,8 @@ require_relative 'pick_analyzer'
 require_relative 'spread_modifier'
 require_relative 'helper'
 
-CURRENT_WEEK = 11
-END_WEEK = 14
+CURRENT_WEEK = 14
+END_WEEK = 16
 MINIMUM_POINT_THRESHOLD = 6
 
 spread_file = '../spreads.csv'
@@ -29,7 +29,7 @@ def print_picks(picks, previous_picks, season)
       best_pick = game == optimal_pick
       puts "#{game} #{best_pick ? '<--- optimal pick' : '' }"
       pick_found ||= best_pick
-      break if (pick_found && index >= 2) && week != CURRENT_WEEK
+      break if (pick_found && index >= 7) && week != CURRENT_WEEK
     end
   end
 end

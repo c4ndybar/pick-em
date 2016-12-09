@@ -40,6 +40,6 @@ class Game
   end
 
   def to_s
-    "#{@week} - #{@away_team}@#{home_team} - #{favored_team} by #{point_differential}"
+    "#{@week} - #{@away_team}@#{home_team} - #{favored_team} by #{point_differential.round(2)}"
   end
 end
