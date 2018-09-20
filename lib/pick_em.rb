@@ -1,11 +1,10 @@
 require_relative 'football_season'
 require_relative 'pick_analyzer'
 require_relative 'spread_modifier'
-require_relative 'helper'
 
-CURRENT_WEEK = 14
+CURRENT_WEEK = 3
 END_WEEK = 16
-MINIMUM_POINT_THRESHOLD = 6
+MINIMUM_POINT_THRESHOLD = 4
 
 spread_file = '../spreads.csv'
 previous_picks_file = '../previous_picks.csv'
@@ -54,8 +53,8 @@ end
 
 teams = load_teams(teams_file) #.sort_by { |t,name| t}
 previous_picks = CSV.readlines(previous_picks_file).flatten
-
 spread_modifier.modify_spreads(season, teams, scores_file)
+
 picks = get_picks_for_season(season, previous_picks)
 
 print_picks(picks, previous_picks, season)

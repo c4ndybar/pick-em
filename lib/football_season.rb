@@ -1,6 +1,6 @@
 require 'CSV'
+require_relative 'math'
 require_relative 'game'
-require_relative 'helper'
 
 class FootballSeason
   attr_reader :games, :teams, :weeks
@@ -24,7 +24,7 @@ class FootballSeason
   def get_median_margin_of_victory_for_team(team)
     point_differentials = get_games_for_team(team).map { |g| g.get_margin_of_victory(team) }
 
-    median(point_differentials)
+    Math.median(point_differentials)
   end
 
   def get_margin_of_victory_for_team_and_week(team, week)

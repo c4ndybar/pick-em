@@ -1,12 +1,11 @@
 class Game
-  attr_accessor :week, :date, :away_team, :home_team, :spread, :point_differential
+  attr_accessor :week, :away_team, :home_team, :spread, :point_differential
 
   def initialize(csv_row)
     @week = csv_row[0].strip.to_i
-    @date = csv_row[1].strip
-    @away_team = csv_row[2].strip
-    @home_team = csv_row[3].strip
-    @spread = csv_row[4].strip.to_f
+    @away_team = csv_row[1].strip
+    @home_team = csv_row[2].strip
+    @spread = csv_row[3].strip.to_f
   end
 
   def point_differential
